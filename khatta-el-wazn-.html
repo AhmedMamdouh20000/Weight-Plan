@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خطة إنقاص الوزن</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="خطة الوزن">
+<meta name="theme-color" content="#0E1613">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='36' fill='%230E1613'/%3E%3Ctext x='90' y='118' font-size='68' text-anchor='middle' fill='%23E3A93E' font-family='Arial' font-weight='bold'%3E84%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='36' fill='%230E1613'/%3E%3Ctext x='90' y='118' font-size='68' text-anchor='middle' fill='%23E3A93E' font-family='Arial' font-weight='bold'%3E84%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1613;
+    --surface:#161F1A;
+    --surface-2:#1E2A23;
+    --border:rgba(237,241,238,0.08);
+    --text:#EDF1EE;
+    --muted:#8FA299;
+    --amber:#E3A93E;
+    --teal:#4FB89C;
+    --red:#E2665B;
+    --amber-dim:rgba(227,169,62,0.14);
+    --teal-dim:rgba(79,184,156,0.14);
+    --red-dim:rgba(226,102,91,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Cairo',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:18px 14px 60px;
+  }
+  .app{max-width:480px;margin:0 auto;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  .hero{
+    background:linear-gradient(160deg,var(--surface-2),var(--surface));
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px 20px 20px;
+    margin-bottom:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-eyebrow{font-size:12px;color:var(--muted);letter-spacing:.3px;margin-bottom:6px;}
+  .hero-title{font-size:22px;font-weight:800;margin:0 0 16px;}
+  .route-wrap{direction:ltr;}
+  .route-track{
+    position:relative;height:8px;border-radius:99px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    margin:26px 4px 30px;
+  }
+  .route-fill{
+    position:absolute;top:0;right:0;height:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--teal),var(--amber));
+  }
+  .route-pin{
+    position:absolute;top:50%;transform:translate(50%,-50%);
+    width:16px;height:16px;border-radius:50%;
+    background:var(--amber);border:3px solid var(--bg);
+    box-shadow:0 0 0 2px var(--amber);
+  }
+  .route-label{
+    position:absolute;top:-24px;transform:translateX(50%);
+    font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted);white-space:nowrap;
+  }
+  .route-milestone{
+    position:absolute;top:-6px;width:2px;height:20px;background:var(--muted);opacity:.5;
+  }
+  .route-milestone-label{
+    position:absolute;top:16px;transform:translateX(50%);
+    font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);white-space:nowrap;
+  }
+  .route-endpoints{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);direction:ltr;}
+  .route-endpoints b{color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;}
+
+  .warn-card{
+    background:var(--red-dim);
+    border:1px solid rgba(226,102,91,0.3);
+    border-radius:16px;
+    padding:16px 16px;
+    margin-bottom:14px;
+  }
+  .warn-title{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--red);font-size:15px;margin-bottom:8px;}
+  .warn-body{font-size:13.5px;line-height:1.8;color:var(--text);opacity:.92;}
+  .warn-body b{color:var(--amber);}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .card-title{font-size:14px;font-weight:700;color:var(--muted);margin:0 0 12px;display:flex;align-items:center;justify-content:space-between;}
+  .card-sub{font-size:11.5px;color:var(--muted);margin:-8px 0 12px;line-height:1.6;}
+
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .stat-box{background:var(--surface-2);border-radius:12px;padding:12px;}
+  .stat-label{font-size:11.5px;color:var(--muted);margin-bottom:4px;}
+  .stat-value{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:700;}
+  .stat-value.teal{color:var(--teal);}
+  .stat-value.amber{color:var(--amber);}
+
+  .chart-wrap{direction:ltr;}
+  svg.chart{width:100%;height:auto;display:block;}
+  .log-form{display:flex;gap:8px;margin-top:12px;}
+  .log-form input{
+    flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+    color:var(--text);padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:15px;
+    direction:ltr;text-align:center;
+  }
+  .log-form button{
+    background:var(--teal);color:#08130F;border:none;border-radius:10px;
+    padding:10px 18px;font-weight:700;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer;
+  }
+  .log-hint{font-size:11.5px;color:var(--muted);margin-top:6px;}
+
+  .macro-row{display:flex;gap:10px;margin-bottom:4px;}
+  .macro-box{flex:1;text-align:center;background:var(--surface-2);border-radius:12px;padding:10px 4px;}
+  .macro-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:16px;}
+  .macro-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+  .cal-hero{text-align:center;padding:10px 0 16px;}
+  .cal-hero .num{font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:700;color:var(--amber);}
+  .cal-hero .unit{font-size:13px;color:var(--muted);}
+  .note{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px;}
+
+  .days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:10px;}
+  .day-chip{
+    background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+    text-align:center;padding:9px 0;font-size:12px;cursor:pointer;color:var(--muted);
+    user-select:none;
+  }
+  .day-chip.active{background:var(--teal-dim);border-color:var(--teal);color:var(--teal);font-weight:700;}
+  .walk-tip{
+    background:var(--amber-dim);border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.7;margin-top:6px;
+  }
+
+  .split-day{
+    border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;background:var(--surface-2);
+  }
+  .split-head{
+    display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;
+  }
+  .split-head .name{font-weight:700;font-size:13.5px;}
+  .split-head .focus{font-size:11px;color:var(--muted);margin-top:2px;}
+  .split-head .arrow{color:var(--muted);font-size:12px;transition:transform .2s;}
+  .split-day.open .arrow{transform:rotate(180deg);}
+  .split-body{display:none;padding:4px 14px 14px;}
+  .split-day.open .split-body{display:block;}
+  .ex-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px dashed var(--border);}
+  .ex-icon{
+    width:32px;height:32px;border-radius:9px;background:var(--teal-dim);color:var(--teal);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .ex-icon svg{width:19px;height:19px;}
+  .ex-icon.cardio{background:var(--amber-dim);color:var(--amber);}
+  .ex-mid{flex:1;}
+  .ex-name{color:var(--text);font-size:12.5px;font-weight:600;}
+  .ex-sets{font-family:'IBM Plex Mono',monospace;color:var(--teal);font-size:11.5px;white-space:nowrap;}
+  .split-empty{font-size:12.5px;color:var(--muted);line-height:1.8;padding:6px 2px;}
+
+  .meal-item{
+    padding:10px 0;border-bottom:1px solid var(--border);
+  }
+  .meal-item:last-child{border-bottom:none;}
+  .meal-top{display:flex;align-items:flex-start;gap:10px;}
+  .meal-check{
+    width:22px;height:22px;border-radius:7px;border:2px solid var(--muted);flex-shrink:0;margin-top:2px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .meal-check.done{background:var(--teal);border-color:var(--teal);}
+  .meal-check.done::after{content:'✓';color:#08130F;font-size:13px;font-weight:700;}
+  .meal-main{flex:1;}
+  .meal-name{font-weight:700;font-size:14px;display:flex;justify-content:space-between;}
+  .meal-kcal{font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:12.5px;}
+  .meal-desc{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.7;}
+  .loc-toggle{display:flex;gap:6px;margin:8px 0 0 32px;}
+  .loc-btn{
+    font-size:11px;padding:5px 12px;border-radius:99px;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:'Cairo',sans-serif;
+  }
+  .loc-btn.active{background:var(--teal-dim);border-color:var(--teal);color:var(--teal);font-weight:700;}
+  .meal-total{display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:13px;}
+  .meal-total b{font-family:'IBM Plex Mono',monospace;color:var(--teal);}
+  .meal-set-tag{
+    font-size:10.5px;background:var(--amber-dim);color:var(--amber);border-radius:99px;padding:3px 10px;font-family:'IBM Plex Mono',monospace;
+  }
+
+  footer{text-align:center;margin-top:6px;}
+  .reset-btn{
+    background:none;border:1px solid var(--border);color:var(--muted);
+    border-radius:10px;padding:8px 16px;font-size:12px;font-family:'Cairo',sans-serif;cursor:pointer;
+  }
+  .foot-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="hero">
+    <div class="hero-eyebrow">خطة أحمد — من ١٣٤.٦ لـ ٨٤ كيلو</div>
+    <h1 class="hero-title" id="heroTitle">يوم <span class="mono">1</span> في رحلتك</h1>
+    <div class="route-wrap">
+      <div class="route-track" id="routeTrack">
+        <div class="route-fill" id="routeFill" style="width:0%"></div>
+        <div class="route-pin" id="routePin" style="right:0%">
+          <div class="route-label" id="routePinLabel">134.6</div>
+        </div>
+        <div class="route-milestone" id="routeMilestone" style="right:0%">
+          <div class="route-milestone-label">31 Dec</div>
+        </div>
+      </div>
+      <div class="route-endpoints">
+        <span>الهدف النهائي<br><b>84.0</b></span>
+        <span style="text-align:left">وزن البداية<br><b>134.6</b></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="warn-card">
+    <div class="warn-title">⚠️ لازم نصحح التوقيت الأول</div>
+    <div class="warn-body">
+      طلبت توصل من <b>134.6</b> لـ <b>84</b> كيلو (يعني تخس <b>50.6</b> كيلو) في حوالي <b>19 أسبوع</b> بس (لحد آخر السنة). ده معدل حوالي <b>2.7 كيلو/الأسبوع</b> — ده مش آمن خالص، ومستحيل تعمله غير بحرمان قاسي هيودي لفقدان عضل، تعب شديد، وارتداد الوزن تاني بسرعة بعدها.
+      <br><br>
+      بالـ2000 سعر اللي طلبتهم، هتنزل بمعدل حوالي <b>~1.1 كيلو/الأسبوع</b> — ده معدل حلو وآمن نسبيًا مع وزن بدايتك، بس لسه فوق الـ50.6 كيلو المطلوبين في الوقت ده. هتكون حوالي <b id="dec31Proj">114.0</b> كيلو آخر السنة، وهتوصل للـ84 كيلو حوالي <b id="realGoalDate">يوليو 2027</b> لو كملت بانتظام من غير ما توقف.
+      <br><br>
+      حاجة تانية مهمة: مع وزن بدايتك، يفضل تعمل كشف طبي وتحاليل دم قبل ما تبدأ الجيم والدايت، عشان تتأكد إن قلبك ومفاصلك تمام للمجهود. وكل شهر لازم نراجع السعرات تاني لأن معدل حرقك هيقل مع نزول وزنك.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">الأرقام دلوقتي</div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-label">وزنك الحالي</div>
+        <div class="stat-value" id="curWeight">134.6 كجم</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">اللي خسرته لحد دلوقتي</div>
+        <div class="stat-value teal" id="lostSoFar">0.0 كجم</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">باقي على آخر السنة</div>
+        <div class="stat-value" id="daysLeft">— يوم</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">معدلك الفعلي/أسبوع</div>
+        <div class="stat-value amber" id="actualRate">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">منحنى وزنك</div>
+    <div class="chart-wrap">
+      <svg class="chart" id="chartSvg" viewBox="0 0 600 220" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="log-form">
+      <input type="number" step="0.1" id="weightInput" placeholder="وزنك النهاردة (كجم)">
+      <button id="logBtn">سجّل</button>
+    </div>
+    <div class="log-hint">سجّل وزنك أول بأول (مرة كل يوم لنفس الميعاد تقريبًا) عشان الأرقام والداشبورد يتحدّثوا لوحدهم.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">هدفك اليومي من الأكل</div>
+    <div class="cal-hero">
+      <div class="num mono">2000</div>
+      <div class="unit">سعر حراري / يوم — ثابت زي ما طلبت</div>
+    </div>
+    <div class="macro-row">
+      <div class="macro-box"><div class="macro-val">150g</div><div class="macro-lbl">بروتين</div></div>
+      <div class="macro-box"><div class="macro-val">224g</div><div class="macro-lbl">كاربوهيدرات</div></div>
+      <div class="macro-box"><div class="macro-val">56g</div><div class="macro-lbl">دهون</div></div>
+    </div>
+    <div class="note">اشرب ٣ – ٣.٥ لتر مياه يوميًا (زوّد شوية يوم الجيم). الـ2000 سعر ثابتة زي ما طلبت، بس عايزين نراجعها كل 4-6 أسابيع، لأن كل ما وزنك ينزل معدل حرقك بيقل، وممكن الـ2000 تبقى مش كفاية عجز بعد فترة.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">جدول الجيم (اختار 3 أيام)</div>
+    <div class="days-grid" id="daysGrid"></div>
+    <div class="walk-tip">💡 مشوارك للشغل حوالي 22 دقيقة مشي. جرّب تمشي بدل ما تركب في يومين/تلاتة في الأسبوع (رايح أو جاي) — دي كارديو إضافي من غير ما تاخد وقت زيادة من يومك.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">برنامج Push / Pull / Legs</div>
+    <div class="card-sub">دوس على أي يوم تحته يفتحلك التمارين. أول أسبوعين ركّز على الفورم بوزن خفيف/متوسط، وحاول مدرب الجيم يشوفلك التمارين دي مرة قبل ما تبدأ. الأيقونات دلوقتي رسمة تقريبية للحركة مش صورة حقيقية — قولي لو عايزني أدورلك على فيديوهات شرح لكل تمرين بدل كدا.</div>
+    <div id="splitList"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">وجبات النهاردة <span class="meal-set-tag" id="mealSetTag">مجموعة أ</span></div>
+    <div class="card-sub">الأكل بيتغير تلقائي كل 3 أيام بين 3 مجموعات (أ / ب / ج). للسناكس، دوس "برا" أو "البيت" حسب فين هتاكلها النهاردة.</div>
+    <div id="mealsList"></div>
+    <div class="meal-total">
+      <span>لو خلصت كل الوجبات</span>
+      <b id="mealTotalKcal">2000 kcal</b>
+    </div>
+  </div>
+
+  <footer>
+    <button class="reset-btn" id="resetBtn">إعادة ضبط كل البيانات</button>
+    <div class="foot-note">مش بديل عن دكتور أو أخصائي تغذية — خصوصًا مع وزن البداية ده، استشارة طبيب قبل البدء حاجة كويسة.</div>
+  </footer>
+
+</div>
+
+<script>
+const START_DATE = '2026-08-22';
+const DEADLINE = '2026-12-31';
+const START_WEIGHT = 134.6;
+const GOAL_WEIGHT = 84.0;
+const SAFE_RATE_KG_PER_WEEK = 1.1;
+const STORE_KEY = 'ahmed-weight-plan-v2';
+
+const DAY_NAMES = ['أحد','اتنين','تلات','أربع','خميس','جمعة','سبت'];
+
+const ICONS = {
+  press: `<path d="M6 24h4M38 24h4M10 24h28M17 24v9M31 24v9M24 33a4 4 0 1 0 .01 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  pull: `<path d="M24 6v18M15 17l9 9 9-9M12 30h24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  curl: `<circle cx="32" cy="10" r="3.2" fill="currentColor"/><path d="M12 34h9V21l11-11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  pushdown: `<circle cx="33" cy="36" r="3.2" fill="currentColor"/><path d="M24 8v18l9 10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  raise: `<circle cx="24" cy="10" r="3.6" fill="currentColor"/><path d="M8 24l16-6 16 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  leg: `<circle cx="15" cy="8" r="3.6" fill="currentColor"/><path d="M15 12v13l13 4v11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  cardio: `<circle cx="19" cy="7" r="3.6" fill="currentColor"/><path d="M19 11v11l-8 10M19 22l11 6M19 16l11-3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  core: `<circle cx="9" cy="19" r="3.6" fill="currentColor"/><path d="M13 21l25 4M20 23v11M30 25v11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`
+};
+function iconSvg(key){
+  return `<svg viewBox="0 0 48 48">${ICONS[key]||ICONS.press}</svg>`;
+}
+
+const WORKOUT_SPLIT = [
+  { label:'Push (صدر + كتف + تراي)', focus:'يوم 1', exercises:[
+    {name:'إحماء: مشي إنكلاين', sets:'8 دقايق', icon:'cardio'},
+    {name:'Chest Press Machine', sets:'3×12', icon:'press'},
+    {name:'Shoulder Press Machine', sets:'3×12', icon:'press'},
+    {name:'Pec Deck / Incline Press', sets:'2×12', icon:'press'},
+    {name:'Lateral Raise', sets:'2×15', icon:'raise'},
+    {name:'Triceps Pushdown', sets:'3×15', icon:'pushdown'}
+  ]},
+  { label:'Pull (ظهر + باي)', focus:'يوم 2', exercises:[
+    {name:'إحماء: بايك', sets:'8 دقايق', icon:'cardio'},
+    {name:'Lat Pulldown', sets:'3×12', icon:'pull'},
+    {name:'Seated Row Machine', sets:'3×12', icon:'pull'},
+    {name:'Assisted Pull-up / Pulldown واسع', sets:'2×12', icon:'pull'},
+    {name:'Face Pull', sets:'2×15', icon:'pull'},
+    {name:'Biceps Curl', sets:'3×15', icon:'curl'}
+  ]},
+  { label:'Legs (رجل + كور)', focus:'يوم 3', exercises:[
+    {name:'إحماء: مشي إنكلاين', sets:'5 دقايق', icon:'cardio'},
+    {name:'Leg Press', sets:'3×12', icon:'leg'},
+    {name:'Leg Curl', sets:'3×12', icon:'leg'},
+    {name:'Leg Extension', sets:'3×12', icon:'leg'},
+    {name:'Hip Thrust / Glute Bridge Machine', sets:'3×12', icon:'leg'},
+    {name:'Calf Raise', sets:'3×15', icon:'leg'},
+    {name:'كارديو ختامي: مشي إنكلاين/بايك', sets:'15-20 د', icon:'cardio'}
+  ]}
+];
+
+const MEAL_SETS = [
+  [ // مجموعة أ
+    {key:'breakfast', name:'فطار (في الشغل)', kcal:480, desc:'٢-٣ بيضة + توست أسمر أو شوفان + خضار، أو فول بزيت زيتون قليل + رغيف بلدي'},
+    {key:'snack1', name:'سناك الضهر', kcal:330, variants:{outside:'علبة تونة + خيار، أو زبادي بروتين جاهز من السوبرماركت', home:'زبادي يوناني + موزة أو تفاحة'}},
+    {key:'dinner', name:'الوجبة الرئيسية (٦-٧ المسا)', kcal:800, desc:'بروتين ١٥٠-٢٠٠ جم (فراخ/سمك/لحمة) + كوب نشويات (رز/بطاطس) + سلطة وخضار كتير'},
+    {key:'snack2', name:'سناك بعد الجيم', kcal:390, variants:{outside:'بروتين بار كويس أو شيك بروتين جاهز', home:'زبادي + عسل + حفنة مكسرات'}}
+  ],
+  [ // مجموعة ب
+    {key:'breakfast', name:'فطار (في الشغل)', kcal:480, desc:'جبنة قريش + خبز أسمر + خيار وطماطم، أو بيضتين مسلوقين + توست'},
+    {key:'snack1', name:'سناك الضهر', kcal:330, variants:{outside:'حفنة لوز/مكسرات (يد واحدة) + قطعة جبنة', home:'تفاحة أو أي فاكهة + حفنة لوز'}},
+    {key:'dinner', name:'الوجبة الرئيسية (٦-٧ المسا)', kcal:800, desc:'كفتة أو فراخ مشوية + مكرونة أو بطاطس مشوية + سلطة خضرا كبيرة'},
+    {key:'snack2', name:'سناك بعد الجيم', kcal:390, variants:{outside:'شيك بروتين (شكاير جاهزة)', home:'زبادي + موزة'}}
+  ],
+  [ // مجموعة ج
+    {key:'breakfast', name:'فطار (في الشغل)', kcal:480, desc:'شوفان بلبن + ملعقة زبدة فول سوداني + قرفة'},
+    {key:'snack1', name:'سناك الضهر', kcal:330, variants:{outside:'بيضتين مسلوقين (محضرين من البيت) + خيار', home:'فاكهة متنوعة (تفاح/كمثرى/برتقال)'}},
+    {key:'dinner', name:'الوجبة الرئيسية (٦-٧ المسا)', kcal:800, desc:'سمك بلطي أو سلمون مشوي + رز أسمر + خضار سوتيه'},
+    {key:'snack2', name:'سناك بعد الجيم', kcal:390, variants:{outside:'علبة تونة صغيرة أو بيضتين مسلوقين', home:'جبنة قريش + عسل'}}
+  ]
+];
+
+let data = null;
+
+function todayStr(){
+  const d = new Date();
+  return d.toISOString().slice(0,10);
+}
+function daysBetween(a,b){
+  return Math.round((new Date(b) - new Date(a)) / 86400000);
+}
+function addDays(dateStr, n){
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0,10);
+}
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {
+    weightLog: [{date: START_DATE, weight: START_WEIGHT}],
+    mealLog: {},
+    mealLoc: {},
+    gymDays: [],
+    openSplits: {}
+  };
+}
+function saveData(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  }catch(e){ console.error('storage save failed', e); }
+}
+
+function getCurrentWeight(){
+  if(!data.weightLog.length) return START_WEIGHT;
+  const sorted = [...data.weightLog].sort((a,b)=> a.date < b.date ? 1 : -1);
+  return sorted[0].weight;
+}
+
+function render(){
+  const current = getCurrentWeight();
+  const today = todayStr();
+  const lost = Math.max(0, START_WEIGHT - current);
+  const daysElapsed = Math.max(0, daysBetween(START_DATE, today));
+  const daysToDeadline = Math.max(0, daysBetween(today, DEADLINE));
+  const totalToLose = START_WEIGHT - GOAL_WEIGHT;
+  const progressPct = Math.min(100, Math.max(0, (lost/totalToLose)*100));
+
+  document.getElementById('heroTitle').innerHTML = `يوم <span class="mono">${daysElapsed+1}</span> في رحلتك`;
+  document.getElementById('routeFill').style.width = progressPct + '%';
+  document.getElementById('routePin').style.right = progressPct + '%';
+  document.getElementById('routePinLabel').textContent = current.toFixed(1);
+  const totalSpanDays = daysBetween(START_DATE, DEADLINE) > 0 ? daysBetween(START_DATE, DEADLINE) : 1;
+  const projLossByDeadline = Math.min(totalToLose, SAFE_RATE_KG_PER_WEEK * (totalSpanDays/7));
+  const milestonePct = (projLossByDeadline/totalToLose)*100;
+  document.getElementById('routeMilestone').style.right = milestonePct + '%';
+
+  document.getElementById('curWeight').textContent = current.toFixed(1) + ' كجم';
+  document.getElementById('lostSoFar').textContent = lost.toFixed(1) + ' كجم';
+  document.getElementById('daysLeft').textContent = daysToDeadline + ' يوم';
+  if(daysElapsed >= 3){
+    const rate = (lost / (daysElapsed/7));
+    document.getElementById('actualRate').textContent = rate.toFixed(2) + ' كجم';
+  } else {
+    document.getElementById('actualRate').textContent = 'قريب هتظهر';
+  }
+
+  const projAtDeadline = Math.max(GOAL_WEIGHT, current - SAFE_RATE_KG_PER_WEEK*(daysToDeadline/7));
+  document.getElementById('dec31Proj').textContent = projAtDeadline.toFixed(1);
+  const weeksToGoal = Math.max(0,(current - GOAL_WEIGHT))/SAFE_RATE_KG_PER_WEEK;
+  const goalDateStr = addDays(today, Math.round(weeksToGoal*7));
+  const gd = new Date(goalDateStr);
+  const monthsAr = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  document.getElementById('realGoalDate').textContent = monthsAr[gd.getMonth()] + ' ' + gd.getFullYear();
+
+  renderChart();
+  renderDays();
+  renderSplit();
+  renderMeals(daysElapsed);
+}
+
+function renderChart(){
+  const svg = document.getElementById('chartSvg');
+  const sorted = [...data.weightLog].sort((a,b)=> a.date < b.date ? -1 : 1);
+  const W=600,H=220,PAD=30;
+  const today = todayStr();
+  const startX = new Date(START_DATE).getTime();
+  const endX = Math.max(new Date(DEADLINE).getTime(), new Date(addDays(today,14)).getTime());
+  const xScale = (dateStr) => PAD + ( (new Date(dateStr).getTime()-startX) / (endX-startX) ) * (W-2*PAD);
+  const minY = GOAL_WEIGHT - 3, maxY = START_WEIGHT + 3;
+  const yScale = (w) => H-PAD - ( (w-minY)/(maxY-minY) ) * (H-2*PAD);
+
+  let svgHtml = '';
+  const goalDateForLine = addDays(today, Math.round((START_WEIGHT-GOAL_WEIGHT)/SAFE_RATE_KG_PER_WEEK*7));
+  const linePts = [
+    [xScale(START_DATE), yScale(START_WEIGHT)],
+    [xScale(goalDateForLine) < W-PAD ? xScale(goalDateForLine) : W-PAD, yScale(GOAL_WEIGHT)]
+  ];
+  svgHtml += `<line x1="${linePts[0][0]}" y1="${linePts[0][1]}" x2="${linePts[1][0]}" y2="${linePts[1][1]}" stroke="#8FA299" stroke-width="1.5" stroke-dasharray="5,5" opacity="0.5"/>`;
+
+  const dlX = xScale(DEADLINE);
+  svgHtml += `<line x1="${dlX}" y1="${PAD}" x2="${dlX}" y2="${H-PAD}" stroke="#E3A93E" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>`;
+  svgHtml += `<text x="${dlX}" y="${PAD-8}" fill="#E3A93E" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">31 Dec</text>`;
+
+  const gy = yScale(GOAL_WEIGHT);
+  svgHtml += `<line x1="${PAD}" y1="${gy}" x2="${W-PAD}" y2="${gy}" stroke="#4FB89C" stroke-width="1" stroke-dasharray="2,4" opacity="0.6"/>`;
+  svgHtml += `<text x="${W-PAD}" y="${gy-6}" fill="#4FB89C" font-size="10" text-anchor="end" font-family="IBM Plex Mono">هدف 84</text>`;
+
+  if(sorted.length){
+    const pts = sorted.map(p => `${xScale(p.date)},${yScale(p.weight)}`).join(' ');
+    svgHtml += `<polyline points="${pts}" fill="none" stroke="#E3A93E" stroke-width="2.5"/>`;
+    sorted.forEach(p=>{
+      svgHtml += `<circle cx="${xScale(p.date)}" cy="${yScale(p.weight)}" r="3.5" fill="#E3A93E"/>`;
+    });
+  }
+  svg.innerHTML = svgHtml;
+}
+
+function renderDays(){
+  const grid = document.getElementById('daysGrid');
+  grid.innerHTML = '';
+  DAY_NAMES.forEach((name, idx)=>{
+    const chip = document.createElement('div');
+    chip.className = 'day-chip' + (data.gymDays.includes(idx) ? ' active' : '');
+    chip.textContent = name;
+    chip.onclick = () => {
+      const i = data.gymDays.indexOf(idx);
+      if(i>-1){ data.gymDays.splice(i,1); }
+      else {
+        if(data.gymDays.length>=3){ data.gymDays.shift(); }
+        data.gymDays.push(idx);
+      }
+      saveData();
+      renderDays();
+      renderSplit();
+    };
+    grid.appendChild(chip);
+  });
+}
+
+function renderSplit(){
+  const list = document.getElementById('splitList');
+  list.innerHTML = '';
+  const sortedDays = [...data.gymDays].sort((a,b)=>a-b);
+  if(sortedDays.length < 3){
+    const p = document.createElement('div');
+    p.className = 'split-empty';
+    p.textContent = 'اختار 3 أيام فوق في "جدول الجيم" الأول عشان برنامج الـ Push/Pull/Legs يترتب على أيامك.';
+    list.appendChild(p);
+    return;
+  }
+  sortedDays.forEach((dayIdx, i)=>{
+    const split = WORKOUT_SPLIT[i % WORKOUT_SPLIT.length];
+    const key = 'd'+dayIdx;
+    const isOpen = !!data.openSplits[key];
+    const wrap = document.createElement('div');
+    wrap.className = 'split-day' + (isOpen ? ' open':'');
+    wrap.innerHTML = `
+      <div class="split-head">
+        <div>
+          <div class="name">${DAY_NAMES[dayIdx]} — ${split.label}</div>
+          <div class="focus">${split.focus}</div>
+        </div>
+        <div class="arrow">▾</div>
+      </div>
+      <div class="split-body">
+        ${split.exercises.map(ex=>`
+          <div class="ex-row">
+            <div class="ex-icon ${ex.icon==='cardio'?'cardio':''}">${iconSvg(ex.icon)}</div>
+            <div class="ex-mid"><div class="ex-name">${ex.name}</div></div>
+            <div class="ex-sets">${ex.sets}</div>
+          </div>`).join('')}
+      </div>`;
+    wrap.querySelector('.split-head').onclick = ()=>{
+      data.openSplits[key] = !data.openSplits[key];
+      saveData();
+      renderSplit();
+    };
+    list.appendChild(wrap);
+  });
+}
+
+function renderMeals(daysElapsed){
+  const list = document.getElementById('mealsList');
+  const today = todayStr();
+  if(!data.mealLog[today]) data.mealLog[today] = {};
+  if(!data.mealLoc[today]) data.mealLoc[today] = {};
+  const setIndex = Math.floor(daysElapsed/3) % MEAL_SETS.length;
+  const setLetters = ['أ','ب','ج'];
+  document.getElementById('mealSetTag').textContent = 'مجموعة ' + setLetters[setIndex];
+  const currentSet = MEAL_SETS[setIndex];
+  list.innerHTML = '';
+  let total = 0;
+  currentSet.forEach(m=>{
+    total += m.kcal;
+    const done = !!data.mealLog[today][m.key];
+    const loc = data.mealLoc[today][m.key] || 'outside';
+    const desc = m.variants ? m.variants[loc] : m.desc;
+    const row = document.createElement('div');
+    row.className = 'meal-item';
+    row.innerHTML = `
+      <div class="meal-top">
+        <div class="meal-check ${done?'done':''}" data-key="${m.key}"></div>
+        <div class="meal-main">
+          <div class="meal-name"><span>${m.name}</span><span class="meal-kcal">${m.kcal} kcal</span></div>
+          <div class="meal-desc">${desc}</div>
+        </div>
+      </div>
+      ${m.variants ? `<div class="loc-toggle">
+        <div class="loc-btn ${loc==='outside'?'active':''}" data-loc="outside">برا</div>
+        <div class="loc-btn ${loc==='home'?'active':''}" data-loc="home">البيت</div>
+      </div>` : ''}`;
+    row.querySelector('.meal-check').onclick = ()=>{
+      data.mealLog[today][m.key] = !data.mealLog[today][m.key];
+      saveData();
+      renderMeals(daysElapsed);
+    };
+    if(m.variants){
+      row.querySelectorAll('.loc-btn').forEach(btn=>{
+        btn.onclick = ()=>{
+          data.mealLoc[today][m.key] = btn.dataset.loc;
+          saveData();
+          renderMeals(daysElapsed);
+        };
+      });
+    }
+    list.appendChild(row);
+  });
+  document.getElementById('mealTotalKcal').textContent = total + ' kcal';
+}
+
+document.getElementById('logBtn').addEventListener('click', ()=>{
+  const val = parseFloat(document.getElementById('weightInput').value);
+  if(!val || val < 40 || val > 250) return;
+  const today = todayStr();
+  const existing = data.weightLog.find(e=>e.date===today);
+  if(existing){ existing.weight = val; }
+  else { data.weightLog.push({date: today, weight: val}); }
+  document.getElementById('weightInput').value = '';
+  saveData();
+  render();
+});
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  data = {
+    weightLog: [{date: START_DATE, weight: START_WEIGHT}],
+    mealLog: {},
+    mealLoc: {},
+    gymDays: [],
+    openSplits: {}
+  };
+  saveData();
+  render();
+});
+
+data = loadData();
+if(!data.mealLoc) data.mealLoc = {};
+if(!data.openSplits) data.openSplits = {};
+if(!data.gymDays) data.gymDays = [];
+if(data.gymDays.length>3) data.gymDays = data.gymDays.slice(0,3);
+render();
+</script>
+</body>
+</html>
