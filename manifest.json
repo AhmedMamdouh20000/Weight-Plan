@@ -1,7 +1,7 @@
 {
   "name": "خطة إنقاص الوزن",
   "short_name": "خطة الوزن",
-  "start_url": "./khatta-el-wazn.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#0E1613",
   "theme_color": "#0E1613",
