@@ -195,6 +195,27 @@
     font-size:10.5px;background:var(--amber-dim);color:var(--amber);border-radius:99px;padding:3px 10px;font-family:'IBM Plex Mono',monospace;
   }
 
+  .activity-form{display:flex;gap:8px;margin-bottom:10px;}
+  .act-select{
+    flex:2;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+    color:var(--text);padding:10px 8px;font-family:'Cairo',sans-serif;font-size:12.5px;
+  }
+  .act-min{
+    flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+    color:var(--text);padding:10px 8px;font-family:'IBM Plex Mono',monospace;font-size:14px;text-align:center;
+  }
+  .activity-form button{
+    background:var(--amber);color:#2A1A05;border:none;border-radius:10px;
+    padding:0 16px;font-weight:700;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;
+  }
+  .act-row{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--surface-2);border-radius:10px;padding:9px 12px;margin-bottom:6px;font-size:12.5px;
+  }
+  .act-row .act-info{display:flex;flex-direction:column;}
+  .act-row .act-kcal{font-family:'IBM Plex Mono',monospace;color:var(--amber);font-weight:700;}
+  .act-row .act-del{color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;}
+
   footer{text-align:center;margin-top:6px;}
   .reset-btn{
     background:none;border:1px solid var(--border);color:var(--muted);
@@ -295,6 +316,24 @@
     <div class="card-title">برنامج Push / Pull / Legs</div>
     <div class="card-sub">دوس على أي يوم تحته يفتحلك التمارين. أول أسبوعين ركّز على الفورم بوزن خفيف/متوسط، وحاول مدرب الجيم يشوفلك التمارين دي مرة قبل ما تبدأ. الأيقونات دلوقتي رسمة تقريبية للحركة مش صورة حقيقية — قولي لو عايزني أدورلك على فيديوهات شرح لكل تمرين بدل كدا.</div>
     <div id="splitList"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">النشاط والحرق النهاردة <span class="meal-set-tag" id="burnTotalTag">0 kcal</span></div>
+    <div class="card-sub">سجّل أي مجهود عملته (مشي، جيم، أي حاجة) والداشبورد يحسبلك تقريبًا حرقت كام سعر. الرقم ده تقريبي مش دقيق 100%.</div>
+    <div class="activity-form">
+      <select id="actType" class="act-select">
+        <option value="3.5">مشي عادي</option>
+        <option value="4.5">مشي سريع / إنكلاين</option>
+        <option value="5.0">تمرين جيم (Push/Pull/Legs)</option>
+        <option value="6.0">كارديو (بايك / جري خفيف)</option>
+        <option value="3.0">مجهود بدني عام (شغل بيت، وقوف كتير)</option>
+      </select>
+      <input type="number" id="actMinutes" class="act-min" placeholder="دقايق">
+      <button id="actAddBtn">أضف</button>
+    </div>
+    <div id="activityList"></div>
+    <div class="note" id="activityNote">لسه مسجلتش أي نشاط النهاردة.</div>
   </div>
 
   <div class="card">
@@ -412,7 +451,8 @@ function loadData(){
     mealLog: {},
     mealLoc: {},
     gymDays: [],
-    openSplits: {}
+    openSplits: {},
+    activityLog: {}
   };
 }
 function saveData(){
@@ -467,7 +507,64 @@ function render(){
   renderDays();
   renderSplit();
   renderMeals(daysElapsed);
+  renderActivity();
 }
+
+const ACT_LABELS = {
+  '3.5':'مشي عادي',
+  '4.5':'مشي سريع / إنكلاين',
+  '5.0':'تمرين جيم (Push/Pull/Legs)',
+  '6.0':'كارديو (بايك / جري خفيف)',
+  '3.0':'مجهود بدني عام'
+};
+
+function renderActivity(){
+  const today = todayStr();
+  if(!data.activityLog[today]) data.activityLog[today] = [];
+  const entries = data.activityLog[today];
+  const list = document.getElementById('activityList');
+  const note = document.getElementById('activityNote');
+  list.innerHTML = '';
+  let total = 0;
+  entries.forEach((e, idx)=>{
+    total += e.kcal;
+    const row = document.createElement('div');
+    row.className = 'act-row';
+    row.innerHTML = `
+      <div class="act-info">
+        <span>${ACT_LABELS[e.met] || 'نشاط'}</span>
+        <span style="color:var(--muted);font-size:11px;">${e.minutes} دقيقة</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="act-kcal">${e.kcal} kcal</span>
+        <span class="act-del" data-idx="${idx}">✕</span>
+      </div>`;
+    row.querySelector('.act-del').onclick = ()=>{
+      data.activityLog[today].splice(idx,1);
+      saveData();
+      renderActivity();
+    };
+    list.appendChild(row);
+  });
+  document.getElementById('burnTotalTag').textContent = total + ' kcal';
+  note.textContent = entries.length
+    ? `حرقت تقريبًا ${total} سعر إضافي النهاردة من غير علاقة بالـ2000 المحسوبين ليك — سيبها زيادة في العجز، مش لازم تعوضها بأكل زيادة.`
+    : 'لسه مسجلتش أي نشاط النهاردة.';
+}
+
+document.getElementById('actAddBtn').addEventListener('click', ()=>{
+  const met = document.getElementById('actType').value;
+  const minutes = parseFloat(document.getElementById('actMinutes').value);
+  if(!minutes || minutes <= 0) return;
+  const weight = getCurrentWeight();
+  const kcal = Math.round(parseFloat(met) * 3.5 * weight / 200 * minutes);
+  const today = todayStr();
+  if(!data.activityLog[today]) data.activityLog[today] = [];
+  data.activityLog[today].push({met, minutes, kcal});
+  document.getElementById('actMinutes').value = '';
+  saveData();
+  renderActivity();
+});
 
 function renderChart(){
   const svg = document.getElementById('chartSvg');
@@ -637,7 +734,8 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
     mealLog: {},
     mealLoc: {},
     gymDays: [],
-    openSplits: {}
+    openSplits: {},
+    activityLog: {}
   };
   saveData();
   render();
@@ -647,6 +745,7 @@ data = loadData();
 if(!data.mealLoc) data.mealLoc = {};
 if(!data.openSplits) data.openSplits = {};
 if(!data.gymDays) data.gymDays = [];
+if(!data.activityLog) data.activityLog = {};
 if(data.gymDays.length>3) data.gymDays = data.gymDays.slice(0,3);
 render();
 </script>
